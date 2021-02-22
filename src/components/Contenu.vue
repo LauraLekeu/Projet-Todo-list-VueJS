@@ -4,18 +4,18 @@
   <div class="container mt-5">
     <h1>Tâches à faire</h1>
     <hr />
-    
+
     <form>
       <div class="form-group">
         <label for="action">Ajouter une tache:</label>
-        <input type="text" name="" id="action" class="form-control">
+        <input v-model="formData.tache" type="text" name="" id="action" class="form-control">
       </div>
-      <button class="btn btn-primary">Créer une tâche</button>
+      <button v-on:click.prevent="ajouterItem" class="btn btn-primary">Créer une tâche</button>
     </form>
 
     <ul class="mt-5">
       <li v-bind:key="index" v-for="(tache, index) in tableauTaches">
-        <Item :tache="tache" :suppression="suppression"></Item>
+        <Item :tache="tache"></Item>
       </li>
     </ul>
   </div>
@@ -34,6 +34,31 @@
           tache: ''
         },
         tableauTaches: ['Tâche 1', 'Tâche 2', 'Tâche 3']
+      }
+    },
+    mounted(){
+      if(localStorage.getItem('tableauTaches')){
+        try {
+            this.tableauTaches = JSON.parse(localStorage.getItem('tableauTaches'));
+          } catch(e) {
+            localStorage.removeItem('tableauTaches');
+          }
+      } 
+    },
+    methods: {
+      ajouterItem: function() {
+        // S'assurer que l'utilisateur a entré quelque chose
+        if (!this.formData.tache){
+          return;
+        }
+
+        this.tableauTaches.push(this.formData.tache)
+        this.formData.tache = ''
+        this.saveTaches();
+      },
+      saveTaches() {
+        const parsed =  JSON.stringify(this.tableauTaches)
+        localStorage.setItem('tableauTaches', parsed)
       }
     },
     components: {
