@@ -7,7 +7,7 @@
 
     <form>
       <div class="form-group">
-        <label for="action">Ajouter une tache:</label>
+        <label for="action">Ajouter une tâche:</label>
         <input v-model="formData.tache" type="text" name="" id="action" class="form-control">
       </div>
       <button v-on:click.prevent="ajouterItem" class="btn btn-primary">Créer une tâche</button>
@@ -15,7 +15,7 @@
 
     <ul class="mt-5">
       <li v-bind:key="index" v-for="(tache, index) in tableauTaches">
-        <Item :tache="tache"></Item>
+        <Item v-bind:id="index" :tache="tache" :supprimerItem="supprimerItem"></Item>
       </li>
     </ul>
   </div>
@@ -54,6 +54,11 @@
 
         this.tableauTaches.push(this.formData.tache)
         this.formData.tache = ''
+        this.saveTaches();
+      },
+      supprimerItem: function(e) {
+        // console.log(e.target.parentNode.id)
+        this.tableauTaches.splice(e.target.parentNode.id, 1) // l'index de l'élément à supprimer, le nombre d'éléments à supprimer
         this.saveTaches();
       },
       saveTaches() {
